@@ -1,0 +1,14 @@
+# Vim generated files
+*~
+*.swp
+
+# Source files
+steam*tar.*
+
+# Generated files
+_tmp/
+_dist/
+steam/
+
+#Source and generated files
+*.tar.gz
