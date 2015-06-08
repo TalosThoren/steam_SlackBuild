@@ -29,7 +29,7 @@ TMP_DIR := ${CURDIR}/_tmp/${APP_NAME}
 CHECK_DIR := ${CURDIR}/_dist
 SOURCE_URL_32 := `awk -F'"' '/DOWNLOAD=/ {print $$2}' ${APP_NAME}.info`
 SOURCE_URL_64 := `awk -F'"' '/DOWNLOAD_x86_64/ {print $$2}' ${APP_NAME}.info`
-VERSION := 1.0.0.49
+VERSION := 1.0.0.50
 SOURCE_ARCHIVE := ${APP_NAME}\_${VERSION}.tar.gz
 
 default: dist
@@ -45,8 +45,15 @@ distcheck: dist getsource
 	cd ${CHECK_DIR}/${APP_NAME} && sh ./${APP_NAME}.SlackBuild
 	${MAKE} clean
 
+checksource: getsource
+	@if [ "${EXPECTED_SOURCE_MD5}" == "${SOURCE_MD5}" ]; then\
+		echo "ARCHIVE MD5SUM PASSED!";\
+	else\
+		echo "ERROR: ARCHIVE MD5SUM FAILED! EXITING!"; exit 1;\
+	fi
+
 getsource:
-	if [ ! -e ${SOURCE_ARCHIVE} ]; then\
+	@if [ ! -e ${SOURCE_ARCHIVE} ]; then\
 		if [[ ("${ARCH}" = "x86_64") && (-n "${SOURCE_URL_64}") ]]; then\
 			wget "${SOURCE_URL_64}";\
 		else\
